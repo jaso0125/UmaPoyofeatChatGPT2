@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using UmaPoyofeatChatGPT2.Models;
-using UmaPoyofeatChatGPT2.Service;
+using UmaPoyofeatChatGPT2.Services;
 
 namespace UmaPoyofeatChatGPT2
 {

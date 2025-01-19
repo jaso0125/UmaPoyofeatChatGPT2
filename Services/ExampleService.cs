@@ -1,6 +1,6 @@
 ﻿using UmaPoyofeatChatGPT2.Models;
 
-namespace UmaPoyofeatChatGPT2.Service
+namespace UmaPoyofeatChatGPT2.Services
 {
     public class ExampleService
     {
