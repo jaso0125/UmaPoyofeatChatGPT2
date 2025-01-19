@@ -31,8 +31,11 @@ namespace UmaPoyofeatChatGPT2
             // DbContext を登録
             serviceCollection.AddDbContext<UmaPoyofeatChatGpt2Context>(options => options.UseSqlServer(connectionString));
 
-            // 必要な他のサービスも登録（例: その他の依存関係）
-            serviceCollection.AddTransient<ExampleService>();
+            // サービスの登録
+            serviceCollection.AddScoped<IRaceService, RaceService>();
+            serviceCollection.AddScoped<IPastRaceService, PastRaceService>();
+            serviceCollection.AddScoped<IRaceInfoService, RaceInfoService>();
+            serviceCollection.AddScoped<IResultService, ResultService>();
 
             // サービスプロバイダーを構築
             var serviceProvider = serviceCollection.BuildServiceProvider();
