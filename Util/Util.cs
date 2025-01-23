@@ -9,10 +9,10 @@ namespace UmaPoyofeatChatGPT2.Util
 {
     public class Util
     {
-        public LineConfig LineConfig { get; set; }
-        public TwitterConfig TwitterConfig { get; set; }
-        public ConnectionStrings ConnectionStrings { get; set; }
-        public OpenAI OpenAI { get; set; }
+        public LineConfig? LineConfig { get; set; }
+        public TwitterConfig? TwitterConfig { get; set; }
+        public ConnectionStrings? ConnectionStrings { get; set; }
+        public OpenAI? OpenAI { get; set; }
 
         public static Util LoadFromFile(string filePath)
         {
