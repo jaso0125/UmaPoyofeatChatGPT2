@@ -5,39 +5,34 @@ namespace UmaPoyofeatChatGPT2
 {
     public partial class Form1 : Form
     {
-        private readonly IHorseRaceService _horseRaceService;
-        private readonly IRaceInfoService _raceInfoService;
+        private readonly ApiService _apiService;
 
-        public Form1(IHorseRaceService raceService, IRaceInfoService raceInfoService)
+        public Form1()
         {
-            _horseRaceService = raceService;
-            _raceInfoService = raceInfoService;
             InitializeComponent();
-            lblCondition.Text = "";
-            lblRaceInfo.Text = "";
+
+            _apiService = new ApiService("https://localhost:7141/api/");
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // 初期データのロード (例: 日付に基づいてレース情報を取得)
-            var today = DateTime.Today.ToString("yyyyMMdd");
-            hiddenDateLabel.Text = today;
-            LoadRaceInfo(today);
+            lblCondition.Text = "";
+            lblRaceInfo.Text = "";
         }
 
-        private void btnSearchRaceInfo_Click(object sender, EventArgs e)
+        private async void btnSearchRaceInfo_Click(object sender, EventArgs e)
         {
             // 選択された日付でレース情報を取得
             var selectedDate = dateTimePicker1.Value.ToString("yyyyMMdd");
-            LoadRaceInfo(selectedDate);
+            var raceInfos = await _apiService.GetRaceInfosByDateAsync(selectedDate);
+
+            LoadRaceInfo(raceInfos);
         }
 
-        private void LoadRaceInfo(string date)
+        private async void LoadRaceInfo(List<RaceInfo> raceInfos)
         {
             dataGridView1.DataSource = null;
             listBox1.Items.Clear();
-
-            var raceInfos = _raceInfoService.GetHorseRacesByDate(date);
 
             foreach (var raceInfo in raceInfos)
             {
@@ -52,7 +47,7 @@ namespace UmaPoyofeatChatGPT2
 
             var firstRaceInfo = raceInfos[0];
 
-            var horseRaces = _horseRaceService.GetHorseRaceByRaceId(firstRaceInfo.RaceId);
+            var horseRaces = await _apiService.GetHorseRacesByRaceIdAsync(firstRaceInfo.RaceId);
 
             BindHorseDataToGridView(horseRaces);
 
@@ -60,10 +55,9 @@ namespace UmaPoyofeatChatGPT2
             lblCondition.Text = $"天候：{firstRaceInfo.Weather} 芝：{firstRaceInfo.ShibaTrackCondition} ダ：{firstRaceInfo.DirtTrackCondition}";
 
             listBox1.SelectedIndex = 0;
-            hiddenDateLabel.Text = date;
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private async void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             dataGridView1.DataSource = null;
 
@@ -75,11 +69,11 @@ namespace UmaPoyofeatChatGPT2
                 var raceCourse = selectedItem.Split(' ')[0];
                 var raceNumber = selectedItem.Split(' ')[1];
 
-                var selectedRace = _raceInfoService.GetRaceInfoByDateRaceCourseRaceNumber(hiddenDateLabel.Text, raceCourse, raceNumber);
+                var selectedRace = await _apiService.GetRaceInfoByDateRaceCourseRaceNumber(hiddenDateLabel.Text, raceCourse, raceNumber);
 
                 if (selectedRace != null)
                 {
-                    var horseRaces = _horseRaceService.GetHorseRaceByRaceId(selectedRace.RaceId);
+                    var horseRaces = await _apiService.GetHorseRacesByRaceIdAsync(selectedRace.RaceId);
                     if (horseRaces.Count != 0)
                     {
                         BindHorseDataToGridView(horseRaces);

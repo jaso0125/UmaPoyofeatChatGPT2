@@ -15,9 +15,9 @@ namespace UmaPoyofeatChatGPT2.Services
 
         #region HorseRace関連
 
-        public async Task<List<HorseRace>> GetHorseRacesAsync()
+        public async Task<List<HorseRace>> GetHorseRacesByRaceIdAsync(string raceId)
         {
-            var response = await _httpClient.GetAsync("HorseRace");
+            var response = await _httpClient.GetAsync($"HorseRace/{raceId}");
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<HorseRace>>(jsonString) ?? new List<HorseRace>();
@@ -36,12 +36,20 @@ namespace UmaPoyofeatChatGPT2.Services
 
         #region RaceInfo関連
 
-        public async Task<List<RaceInfo>> GetRaceInfoAsync(string raceId)
+        public async Task<List<RaceInfo>> GetRaceInfosByDateAsync(string date)
         {
-            var response = await _httpClient.GetAsync($"RaceInfo/{raceId}");
+            var response = await _httpClient.GetAsync($"RaceInfo/{date}");
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<RaceInfo>>(jsonString) ?? new List<RaceInfo>();
+        }
+
+        public async Task<RaceInfo> GetRaceInfoByDateRaceCourseRaceNumber(string raceId, string raceCource, string raceNumber)
+        {
+            var response = await _httpClient.GetAsync($"RaceInfo/{raceId}/{raceCource}/{raceNumber}");
+            response.EnsureSuccessStatusCode();
+            var jsonString = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<RaceInfo>(jsonString) ?? new RaceInfo();
         }
 
         public async Task UpsertRaceInfoAsync(RaceInfo raceInfo)
