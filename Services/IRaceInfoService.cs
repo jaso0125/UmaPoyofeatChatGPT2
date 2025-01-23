@@ -8,6 +8,8 @@ namespace UmaPoyofeatChatGPT2.Services
 
         RaceInfo? GetRaceInfoById(string raceId);
 
+        List<RaceInfo> GetHorseRacesByDate(string date);
+
         void AddRaceInfo(RaceInfo raceInfo);
 
         void UpdateRaceInfo(RaceInfo raceInfo);

@@ -7,11 +7,11 @@ using UmaPoyofeatChatGPT2.Models;
 
 namespace UmaPoyofeatChatGPT2.Services
 {
-    public class RaceService : IRaceService
+    public class HorseRaceService : IHorseRaceService
     {
         private readonly UmaPoyofeatChatGpt2Context _dbContext;
 
-        public RaceService(UmaPoyofeatChatGpt2Context dbContext)
+        public HorseRaceService(UmaPoyofeatChatGpt2Context dbContext)
         {
             _dbContext = dbContext;
         }
@@ -46,6 +46,11 @@ namespace UmaPoyofeatChatGPT2.Services
                 _dbContext.HorseRaces.Remove(horseRace);
                 _dbContext.SaveChanges();
             }
+        }
+
+        public List<HorseRace> GetHorseRaceByRaceId(string raceId)
+        {
+            return _dbContext.HorseRaces.Where(x => x.RaceId == raceId).ToList();
         }
     }
 }

@@ -42,5 +42,12 @@ namespace UmaPoyofeatChatGPT2.Services
                 _dbContext.SaveChanges();
             }
         }
+
+        public List<RaceInfo> GetHorseRacesByDate(string date)
+        {
+            return _dbContext.RaceInfos
+                .Where(r => r.Date == date)
+                .ToList();
+        }
     }
 }

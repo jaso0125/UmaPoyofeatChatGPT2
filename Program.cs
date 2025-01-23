@@ -32,7 +32,7 @@ namespace UmaPoyofeatChatGPT2
             serviceCollection.AddDbContext<UmaPoyofeatChatGpt2Context>(options => options.UseSqlServer(connectionString));
 
             // サービスの登録
-            serviceCollection.AddScoped<IRaceService, RaceService>();
+            serviceCollection.AddScoped<IHorseRaceService, HorseRaceService>();
             serviceCollection.AddScoped<IPastRaceService, PastRaceService>();
             serviceCollection.AddScoped<IRaceInfoService, RaceInfoService>();
             serviceCollection.AddScoped<IResultService, ResultService>();
