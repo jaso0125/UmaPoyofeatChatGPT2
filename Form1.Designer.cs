@@ -69,6 +69,7 @@
             btnSearchRaceInfo.TabIndex = 1;
             btnSearchRaceInfo.Text = "レース情報取得";
             btnSearchRaceInfo.UseVisualStyleBackColor = true;
+            btnSearchRaceInfo.Click += btnSearchRaceInfo_Click;
             // 
             // lblRaceInfo
             // 
@@ -250,6 +251,7 @@
             Controls.Add(dateTimePicker1);
             Name = "Form1";
             Text = "UMA-03 Mark.06";
+            Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
             PerformLayout();
