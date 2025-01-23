@@ -49,5 +49,14 @@ namespace UmaPoyofeatChatGPT2.Services
                 .Where(r => r.Date == date)
                 .ToList();
         }
+
+        public RaceInfo? GetRaceInfoByDateRaceCourseRaceNumber(string date, string raceCourse, string Raceumber)
+        {
+            return _dbContext.RaceInfos
+                .Where(r => r.Date == date)
+                .Where(r => r.RaceCourse == raceCourse)
+                .Where(r => r.RaceNumber == Raceumber)
+                .SingleOrDefault();
+        }
     }
 }

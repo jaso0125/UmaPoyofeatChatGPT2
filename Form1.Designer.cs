@@ -41,6 +41,7 @@
             btnLINE = new Button();
             btnX = new Button();
             btnOrePuro = new Button();
+            hiddenDateLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -50,6 +51,7 @@
             dateTimePicker1.Name = "dateTimePicker1";
             dateTimePicker1.Size = new Size(138, 23);
             dateTimePicker1.TabIndex = 0;
+            dateTimePicker1.ValueChanged += dateTimePicker1_ValueChanged;
             // 
             // btnSearchRaceInfo
             // 
@@ -97,6 +99,7 @@
             listBox1.Name = "listBox1";
             listBox1.Size = new Size(90, 649);
             listBox1.TabIndex = 5;
+            listBox1.SelectedIndexChanged += listBox1_SelectedIndexChanged;
             // 
             // richTextBoxHorseInfo
             // 
@@ -161,12 +164,22 @@
             btnOrePuro.Text = "俺プロ登録";
             btnOrePuro.UseVisualStyleBackColor = true;
             // 
+            // hiddenDateLabel
+            // 
+            hiddenDateLabel.AutoSize = true;
+            hiddenDateLabel.ForeColor = Color.FromArgb(29, 64, 96);
+            hiddenDateLabel.Location = new Point(1311, 9);
+            hiddenDateLabel.Name = "hiddenDateLabel";
+            hiddenDateLabel.Size = new Size(0, 15);
+            hiddenDateLabel.TabIndex = 13;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(29, 64, 96);
             ClientSize = new Size(1361, 754);
+            Controls.Add(hiddenDateLabel);
             Controls.Add(btnOrePuro);
             Controls.Add(btnX);
             Controls.Add(btnLINE);
@@ -203,5 +216,6 @@
         private Button btnLINE;
         private Button btnX;
         private Button btnOrePuro;
+        private Label hiddenDateLabel;
     }
 }

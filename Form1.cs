@@ -1,3 +1,4 @@
+using UmaPoyofeatChatGPT2.Models;
 using UmaPoyofeatChatGPT2.Services;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
@@ -21,6 +22,7 @@ namespace UmaPoyofeatChatGPT2
         {
             // 初期データのロード (例: 日付に基づいてレース情報を取得)
             var today = DateTime.Today.ToString("yyyyMMdd");
+            hiddenDateLabel.Text = today;
             LoadRaceInfo(today);
         }
 
@@ -33,6 +35,7 @@ namespace UmaPoyofeatChatGPT2
 
         private void LoadRaceInfo(string date)
         {
+            dataGridView1.DataSource = null;
             listBox1.Items.Clear();
 
             var raceInfos = _raceInfoService.GetHorseRacesByDate(date);
@@ -41,7 +44,6 @@ namespace UmaPoyofeatChatGPT2
             {
                 listBox1.Items.Add($"{raceInfo.RaceCourse} {raceInfo.RaceNumber}");
             }
-            dataGridView1.Rows.Clear();
 
             if (raceInfos.Count == 0)
             {
@@ -51,9 +53,9 @@ namespace UmaPoyofeatChatGPT2
 
             var firstRaceInfo = raceInfos[0];
 
-            var horceRaces = _horseRaceService.GetHorseRaceByRaceId(firstRaceInfo.RaceId);
+            var horseRaces = _horseRaceService.GetHorseRaceByRaceId(firstRaceInfo.RaceId);
 
-            dataGridView1.DataSource = horceRaces.Select(r => new
+            dataGridView1.DataSource = horseRaces.Select(r => new
             {
                 枠 = r.Wakuban,
                 馬番 = r.Umaban,
@@ -71,6 +73,51 @@ namespace UmaPoyofeatChatGPT2
             lblCondition.Text = $"天候：{firstRaceInfo.Weather} 芝：{firstRaceInfo.ShibaTrackCondition} ダ：{firstRaceInfo.DirtTrackCondition}";
 
             listBox1.SelectedIndex = 0;
+            hiddenDateLabel.Text = date;
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dataGridView1.DataSource = null;
+
+            var selectedItem = listBox1.SelectedItem?.ToString();
+            if (selectedItem == null) return;
+
+            if (listBox1.SelectedItem != null)
+            {
+                var raceCourse = selectedItem.Split(' ')[0];
+                var raceNumber = selectedItem.Split(' ')[1];
+
+                var selectedRace = _raceInfoService.GetRaceInfoByDateRaceCourseRaceNumber(hiddenDateLabel.Text, raceCourse, raceNumber);
+
+                if (selectedRace != null)
+                {
+                    var horseRaces = _horseRaceService.GetHorseRaceByRaceId(selectedRace.RaceId);
+                    if (horseRaces.Count != 0)
+                    {
+                        dataGridView1.DataSource = horseRaces.Select(r => new
+                        {
+                            枠 = r.Wakuban,
+                            馬番 = r.Umaban,
+                            馬名 = r.HorseName,
+                            性齢 = r.GenderAge,
+                            斤量 = r.Kinryo,
+                            騎手名 = r.Jockey,
+                            馬体重 = r.WeightChange,
+                            予想印 = "",
+                            調教タイム = r.TrainingTime,
+                            厩舎コメント = r.TrainerComment
+                        }).ToList();
+                        lblRaceInfo.Text = $"{selectedRace.RaceCourse}競馬場 {selectedRace.RaceNumber} {selectedRace.RaceName} {selectedRace.StartTime} {selectedRace.Distance}";
+                        lblCondition.Text = $"天候：{selectedRace.Weather} 芝：{selectedRace.ShibaTrackCondition} ダ：{selectedRace.DirtTrackCondition}";
+                    }
+                }
+            }
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            hiddenDateLabel.Text = dateTimePicker1.Value.ToString("yyyyMMdd");
         }
     }
 }

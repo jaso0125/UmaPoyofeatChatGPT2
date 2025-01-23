@@ -50,7 +50,12 @@ namespace UmaPoyofeatChatGPT2.Services
 
         public List<HorseRace> GetHorseRaceByRaceId(string raceId)
         {
-            return _dbContext.HorseRaces.Where(x => x.RaceId == raceId).ToList();
+            return _dbContext.HorseRaces
+                .Where(x => x.RaceId == raceId)
+                .AsEnumerable()
+                .OrderBy(x => x.Wakuban)
+                .ThenBy(x => int.Parse(x.Umaban))
+                .ToList();
         }
     }
 }
