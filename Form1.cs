@@ -1,3 +1,4 @@
+using UmaPoyofeatChatGPT2.Common;
 using UmaPoyofeatChatGPT2.Models;
 using UmaPoyofeatChatGPT2.Services;
 
@@ -10,8 +11,9 @@ namespace UmaPoyofeatChatGPT2
         public Form1()
         {
             InitializeComponent();
+            var appSettings = AppSettingsManager.GetSection<AppSettings.AppSettings>("AppSettings");
 
-            _apiService = new ApiService("https://localhost:7141/api/");
+            _apiService = new ApiService(appSettings.ApiSettings.BaseUrl);
         }
 
         private void Form1_Load(object sender, EventArgs e)

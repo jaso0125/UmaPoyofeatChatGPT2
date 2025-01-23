@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
 using UmaPoyofeatChatGPT2.Models;
-using UmaPoyofeatChatGPT2.Services;
 
 namespace UmaPoyofeatChatGPT2
 {
@@ -20,8 +18,6 @@ namespace UmaPoyofeatChatGPT2
                 .AddJsonFile("AppSettings/appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
 
-            var logFilePath = configuration["Logging:File:Path"] ?? "logs/log-.txt";
-
             // サービスコレクションを作成
             var serviceCollection = new ServiceCollection();
 
@@ -30,12 +26,6 @@ namespace UmaPoyofeatChatGPT2
 
             // DbContext を登録
             serviceCollection.AddDbContext<UmaPoyofeatChatGpt2Context>(options => options.UseSqlServer(connectionString));
-
-            // サービスの登録
-            serviceCollection.AddScoped<IHorseRaceService, HorseRaceService>();
-            serviceCollection.AddScoped<IPastRaceService, PastRaceService>();
-            serviceCollection.AddScoped<IRaceInfoService, RaceInfoService>();
-            serviceCollection.AddScoped<IResultService, ResultService>();
 
             // サービスプロバイダーを構築
             var serviceProvider = serviceCollection.BuildServiceProvider();
