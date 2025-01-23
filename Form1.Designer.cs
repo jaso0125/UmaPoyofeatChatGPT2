@@ -33,16 +33,6 @@
             lblRaceInfo = new Label();
             lblCondition = new Label();
             dataGridView1 = new DataGridView();
-            Wakuban = new DataGridViewTextBoxColumn();
-            Umaban = new DataGridViewTextBoxColumn();
-            Bamei = new DataGridViewTextBoxColumn();
-            SexBarei = new DataGridViewTextBoxColumn();
-            Kinryo = new DataGridViewTextBoxColumn();
-            KisyuName = new DataGridViewTextBoxColumn();
-            Bataijyu = new DataGridViewTextBoxColumn();
-            Mark = new DataGridViewTextBoxColumn();
-            Time = new DataGridViewTextBoxColumn();
-            Comment = new DataGridViewTextBoxColumn();
             listBox1 = new ListBox();
             richTextBoxHorseInfo = new RichTextBox();
             richTextBoxTweetMessage = new RichTextBox();
@@ -94,69 +84,10 @@
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Wakuban, Umaban, Bamei, SexBarei, Kinryo, KisyuName, Bataijyu, Mark, Time, Comment });
             dataGridView1.Location = new Point(114, 56);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new Size(1235, 326);
             dataGridView1.TabIndex = 4;
-            // 
-            // Wakuban
-            // 
-            Wakuban.HeaderText = "枠";
-            Wakuban.Name = "Wakuban";
-            Wakuban.Width = 50;
-            // 
-            // Umaban
-            // 
-            Umaban.HeaderText = "馬番";
-            Umaban.Name = "Umaban";
-            Umaban.Width = 60;
-            // 
-            // Bamei
-            // 
-            Bamei.HeaderText = "馬名";
-            Bamei.Name = "Bamei";
-            Bamei.Width = 200;
-            // 
-            // SexBarei
-            // 
-            SexBarei.HeaderText = "性齢";
-            SexBarei.Name = "SexBarei";
-            SexBarei.Width = 70;
-            // 
-            // Kinryo
-            // 
-            Kinryo.HeaderText = "斤量";
-            Kinryo.Name = "Kinryo";
-            Kinryo.Width = 60;
-            // 
-            // KisyuName
-            // 
-            KisyuName.HeaderText = "騎手名";
-            KisyuName.Name = "KisyuName";
-            // 
-            // Bataijyu
-            // 
-            Bataijyu.HeaderText = "馬体重(増減)";
-            Bataijyu.Name = "Bataijyu";
-            // 
-            // Mark
-            // 
-            Mark.HeaderText = "予想印";
-            Mark.Name = "Mark";
-            Mark.Width = 70;
-            // 
-            // Time
-            // 
-            Time.HeaderText = "調教タイム";
-            Time.Name = "Time";
-            Time.Width = 85;
-            // 
-            // Comment
-            // 
-            Comment.HeaderText = "厩舎コメント";
-            Comment.Name = "Comment";
-            Comment.Width = 380;
             // 
             // listBox1
             // 
@@ -264,16 +195,6 @@
         private Label lblRaceInfo;
         private Label lblCondition;
         private DataGridView dataGridView1;
-        private DataGridViewTextBoxColumn Wakuban;
-        private DataGridViewTextBoxColumn Umaban;
-        private DataGridViewTextBoxColumn Bamei;
-        private DataGridViewTextBoxColumn SexBarei;
-        private DataGridViewTextBoxColumn Kinryo;
-        private DataGridViewTextBoxColumn KisyuName;
-        private DataGridViewTextBoxColumn Bataijyu;
-        private DataGridViewTextBoxColumn Mark;
-        private DataGridViewTextBoxColumn Time;
-        private DataGridViewTextBoxColumn Comment;
         private ListBox listBox1;
         private RichTextBox richTextBoxHorseInfo;
         private RichTextBox richTextBoxTweetMessage;

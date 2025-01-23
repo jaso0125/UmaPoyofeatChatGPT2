@@ -32,15 +32,16 @@ namespace UmaPoyofeatChatGPT2
                 .Where(r => r.RaceId.StartsWith(date)) // 日付でフィルタリング
                 .Select(r => new
                 {
-                    Wakuban = r.Wakuban,
-                    Umaban = r.Umaban,
-                    Bamei = r.HorseName,
-                    SexBarei = r.GenderAge,
-                    Kinryo = r.Kinryo,
-                    KisyuName = r.Jockey,
-                    Bataijyu = r.WeightChange,
-                    Time = r.TrainingTime,
-                    Comment = r.TrainerComment
+                    枠 = r.Wakuban,
+                    馬番 = r.Umaban,
+                    馬名 = r.HorseName,
+                    性齢 = r.GenderAge,
+                    斤量 = r.Kinryo,
+                    騎手名 = r.Jockey,
+                    馬体重 = r.WeightChange,
+                    予想印 = "",
+                    調教タイム = r.TrainingTime,
+                    厩舎コメント = r.TrainerComment
                 })
                 .ToList();
 

@@ -40,35 +40,12 @@ namespace UmaPoyofeatChatGPT2
             // サービスプロバイダーを構築
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(configuration)
-                .WriteTo.Console()
-                .WriteTo.File(
-                    logFilePath,
-                    rollingInterval: RollingInterval.Day
-                )
-                .CreateLogger();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-            Log.Information("Application started");
-
-            try
-            {
-                // アプリケーションのメインロジック
-                Log.Information("Running the application...");
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "An unhandled exception occurred.");
-            }
-            finally
-            {
-                Log.CloseAndFlush();
-            }
-
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            // Form1 を依存性注入で生成
+            var form = ActivatorUtilities.CreateInstance<Form1>(serviceProvider);
+            Application.Run(form);
         }
     }
 }
