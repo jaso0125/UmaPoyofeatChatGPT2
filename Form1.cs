@@ -1,6 +1,5 @@
 using UmaPoyofeatChatGPT2.Models;
 using UmaPoyofeatChatGPT2.Services;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace UmaPoyofeatChatGPT2
 {
@@ -55,19 +54,7 @@ namespace UmaPoyofeatChatGPT2
 
             var horseRaces = _horseRaceService.GetHorseRaceByRaceId(firstRaceInfo.RaceId);
 
-            dataGridView1.DataSource = horseRaces.Select(r => new
-            {
-                枠 = r.Wakuban,
-                馬番 = r.Umaban,
-                馬名 = r.HorseName,
-                性齢 = r.GenderAge,
-                斤量 = r.Kinryo,
-                騎手名 = r.Jockey,
-                馬体重 = r.WeightChange,
-                予想印 = "",
-                調教タイム = r.TrainingTime,
-                厩舎コメント = r.TrainerComment
-            }).ToList();
+            BindHorseDataToGridView(horseRaces);
 
             lblRaceInfo.Text = $"{firstRaceInfo.RaceCourse} 競馬場 {firstRaceInfo.RaceNumber} {firstRaceInfo.RaceName} {firstRaceInfo.StartTime} 発走 {firstRaceInfo.Distance}";
             lblCondition.Text = $"天候：{firstRaceInfo.Weather} 芝：{firstRaceInfo.ShibaTrackCondition} ダ：{firstRaceInfo.DirtTrackCondition}";
@@ -95,19 +82,7 @@ namespace UmaPoyofeatChatGPT2
                     var horseRaces = _horseRaceService.GetHorseRaceByRaceId(selectedRace.RaceId);
                     if (horseRaces.Count != 0)
                     {
-                        dataGridView1.DataSource = horseRaces.Select(r => new
-                        {
-                            枠 = r.Wakuban,
-                            馬番 = r.Umaban,
-                            馬名 = r.HorseName,
-                            性齢 = r.GenderAge,
-                            斤量 = r.Kinryo,
-                            騎手名 = r.Jockey,
-                            馬体重 = r.WeightChange,
-                            予想印 = "",
-                            調教タイム = r.TrainingTime,
-                            厩舎コメント = r.TrainerComment
-                        }).ToList();
+                        BindHorseDataToGridView(horseRaces);
                         lblRaceInfo.Text = $"{selectedRace.RaceCourse}競馬場 {selectedRace.RaceNumber} {selectedRace.RaceName} {selectedRace.StartTime} {selectedRace.Distance}";
                         lblCondition.Text = $"天候：{selectedRace.Weather} 芝：{selectedRace.ShibaTrackCondition} ダ：{selectedRace.DirtTrackCondition}";
                     }
@@ -118,6 +93,23 @@ namespace UmaPoyofeatChatGPT2
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
             hiddenDateLabel.Text = dateTimePicker1.Value.ToString("yyyyMMdd");
+        }
+
+        private void BindHorseDataToGridView(List<HorseRace> horseRaces)
+        {
+            dataGridView1.DataSource = horseRaces.Select(r => new
+            {
+                枠 = r.Wakuban,
+                馬番 = r.Umaban,
+                馬名 = r.HorseName,
+                性齢 = r.GenderAge,
+                斤量 = r.Kinryo,
+                騎手名 = r.Jockey,
+                馬体重 = r.WeightChange,
+                予想印 = "",
+                調教タイム = r.TrainingTime,
+                厩舎コメント = r.TrainerComment
+            }).ToList();
         }
     }
 }
