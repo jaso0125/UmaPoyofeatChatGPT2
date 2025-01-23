@@ -50,5 +50,8 @@ namespace UmaPoyofeatChatGPT2.Models
 
         [MaxLength(500)]
         public string? TrainerComment { get; set; } // 調教師コメント
+
+        public DateTime? CreateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }

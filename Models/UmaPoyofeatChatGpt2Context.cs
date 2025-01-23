@@ -65,6 +65,8 @@ namespace UmaPoyofeatChatGPT2.Models
                 entity.Property(e => e.WeightChange)
                     .HasMaxLength(50)
                     .HasDefaultValue("");
+                entity.Property(e => e.CreateDate);
+                entity.Property(e => e.UpdateDate);
             });
 
             modelBuilder.Entity<PastRace>(entity =>
@@ -116,6 +118,8 @@ namespace UmaPoyofeatChatGPT2.Models
                 entity.Property(e => e.ShibaTrackCondition).HasMaxLength(50);
                 entity.Property(e => e.StartTime).HasMaxLength(10);
                 entity.Property(e => e.Weather).HasMaxLength(50);
+                entity.Property(e => e.CreateDate);
+                entity.Property(e => e.UpdateDate);
             });
 
             modelBuilder.Entity<Result>(entity =>

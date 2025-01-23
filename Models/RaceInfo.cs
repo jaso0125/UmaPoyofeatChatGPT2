@@ -38,5 +38,8 @@ namespace UmaPoyofeatChatGPT2.Models
 
         [MaxLength(50)]
         public string DirtTrackCondition { get; set; } = null!; // ダートの馬場状態
+
+        public DateTime? CreateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }
