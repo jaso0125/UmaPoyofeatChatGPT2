@@ -141,6 +141,7 @@
             btnPutnote.TabIndex = 9;
             btnPutnote.Text = "note更新";
             btnPutnote.UseVisualStyleBackColor = true;
+            btnPutnote.Click += btnPutnote_Click;
             // 
             // btnLINE
             // 

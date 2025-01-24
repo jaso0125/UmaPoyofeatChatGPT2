@@ -8,6 +8,7 @@
         public OpenAI OpenAI { get; set; } = new OpenAI();
         public ApiSettings ApiSettings { get; set; } = new ApiSettings();
         public NetKeiba NetKeiba { get; set; } = new NetKeiba();
+        public NoteConfig NoteConfig { get; set; } = new NoteConfig();
     }
 
     public class LineConfig
@@ -44,5 +45,13 @@
         public string LoginUrl { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+    }
+
+    public class NoteConfig
+    {
+        public string LoginUrl { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string PostCreateUrl { get; set; } = string.Empty;
     }
 }

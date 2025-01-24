@@ -203,9 +203,9 @@ namespace UmaPoyofeatChatGPT2
                 chatCompletion.Choices ??= new List<Choice> { new Choice() };
 
                 var predictionText = chatCompletion.Choices[0].Message?.Content;
-                richTextBoxHorseInfo.Text = predictionText.Replace("```", "").Replace("json", "");
+                richTextBoxHorseInfo.Text = predictionText!.Replace("```", "").Replace("json", "");
 
-                var gridViewModels = UpdatePredictionMarks(chatCompletion.Choices[0].Message?.Content);
+                var gridViewModels = UpdatePredictionMarks(chatCompletion.Choices[0].Message?.Content!);
                 SortDataGridViewByPredictionMarks(gridViewModels);
 
                 toolStripStatusLabel1.Text = "予想完了";
@@ -239,13 +239,13 @@ namespace UmaPoyofeatChatGPT2
             {
                 var gridViewModel = new GridViewModel
                 {
-                    枠 = dataGridView1.Rows[i].Cells[0].Value?.ToString(),
-                    馬番 = dataGridView1.Rows[i].Cells[1].Value?.ToString(),
-                    馬名 = dataGridView1.Rows[i].Cells[2].Value?.ToString(),
-                    性齢 = dataGridView1.Rows[i].Cells[3].Value?.ToString(),
-                    斤量 = dataGridView1.Rows[i].Cells[4].Value?.ToString(),
-                    騎手名 = dataGridView1.Rows[i].Cells[5].Value?.ToString(),
-                    馬体重 = dataGridView1.Rows[i].Cells[6].Value?.ToString(),
+                    枠 = dataGridView1.Rows[i].Cells[0].Value?.ToString()!,
+                    馬番 = dataGridView1.Rows[i].Cells[1].Value?.ToString()!,
+                    馬名 = dataGridView1.Rows[i].Cells[2].Value?.ToString()!,
+                    性齢 = dataGridView1.Rows[i].Cells[3].Value?.ToString()!,
+                    斤量 = dataGridView1.Rows[i].Cells[4].Value?.ToString()!,
+                    騎手名 = dataGridView1.Rows[i].Cells[5].Value?.ToString()!,
+                    馬体重 = dataGridView1.Rows[i].Cells[6].Value?.ToString()!,
                     調教タイム = dataGridView1.Rows[i].Cells[8].Value?.ToString(),
                     厩舎コメント = dataGridView1.Rows[i].Cells[9].Value?.ToString(),
                 };
@@ -298,6 +298,13 @@ namespace UmaPoyofeatChatGPT2
                 調教タイム = r.調教タイム,
                 厩舎コメント = r.厩舎コメント
             }).ToList();
+        }
+
+        private async void btnPutnote_Click(object sender, EventArgs e)
+        {
+            var result = await NoteService.PutNote(richTextBoxHorseInfo.Text, _appSettings.NoteConfig);
+
+            toolStripStatusLabel1.Text = $"Note投稿完了 {result}";
         }
     }
 }
