@@ -151,6 +151,7 @@
             btnLINE.TabIndex = 10;
             btnLINE.Text = "LINE";
             btnLINE.UseVisualStyleBackColor = true;
+            btnLINE.Click += btnLINE_Click;
             // 
             // btnX
             // 

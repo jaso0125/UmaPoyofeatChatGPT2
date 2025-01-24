@@ -306,5 +306,35 @@ namespace UmaPoyofeatChatGPT2
 
             toolStripStatusLabel1.Text = $"Note投稿完了 {result}";
         }
+
+        private async void btnLINE_Click(object sender, EventArgs e)
+        {
+            var channelAccessToken = _appSettings.LineConfig.ChannelAccessToken;
+            var lineUserId = _appSettings.LineConfig.UserId;
+
+            var notifier = new LineService(_appSettings.LineConfig);
+
+            var messages = new List<string> { $"{lblRaceInfo.Text}ね！予想してやるよ。{Environment.NewLine}" };
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    var umaban = row.Cells[1].Value?.ToString();
+                    var horseName = row.Cells[2].Value?.ToString();
+                    var prediction = row.Cells[7].Value?.ToString();
+
+                    if (!string.IsNullOrEmpty(umaban) && !string.IsNullOrEmpty(horseName) && !string.IsNullOrEmpty(prediction))
+                    {
+                        var message = $"{umaban}番 {horseName} {prediction}";
+                        messages.Add(message);
+                    }
+                }
+            }
+
+            var combinedMessage = string.Join("\n", messages);
+            combinedMessage += $"{Environment.NewLine}{Environment.NewLine}予想してやってんだぞ！ありがたく思え！カスが！";
+            await notifier.SendMessageAsync(combinedMessage);
+        }
     }
 }

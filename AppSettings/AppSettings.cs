@@ -15,6 +15,7 @@
     {
         public string ChannelAccessToken { get; set; } = string.Empty;
         public string UserId { get; set; } = string.Empty;
+        public string RequestUri { get; set; } = string.Empty;
     }
 
     public class TwitterConfig
