@@ -1,3 +1,6 @@
+using Newtonsoft.Json;
+using System.Text;
+using System.Windows.Forms;
 using System.Xml.Linq;
 using UmaPoyofeatChatGPT2.Common;
 using UmaPoyofeatChatGPT2.Data;
@@ -9,15 +12,17 @@ namespace UmaPoyofeatChatGPT2
     public partial class Form1 : Form
     {
         private readonly ApiService _apiService;
+        private readonly AppSettings.AppSettings _appSettings = AppSettingsManager.GetSection<AppSettings.AppSettings>("AppSettings");
         private readonly WebScrapingService _webScrapingService;
+        private const string ResponseExample = "{\r\n  \"title\": \"2024年5月5日 東京競馬場 11R NHKマイルC(G1)\",\r\n  \"body\": \"### レース情報\\n- **開催日**: 2024年5月5日\\n- **開催競馬場**: 東京競馬場\\n- **レース名**: NHKマイルC(G1)\\n- **距離**: 芝1600m\\n- **天候**: 晴\\n- **芝馬場状態**: 良\\n\\n### 出走馬の印と評価\\n#### 16. **ジャンタルマンタル （馬番: 16, 騎手: 川田将雅）**\\n- **印**: ◎\\n- **評価**: 皐月賞でも3着に入るなど、安定した実力を持っています。また、東京1600mの舞台でも前走の実績があることから、最有力候補です。\\n\\n#### 14. **アスコリピチェーノ （馬番: 14, 騎手: ルメール）**\\n- **印**: ○\\n- **評価**: 阪神ジュベナイルFでは勝利し、桜花賞でも好走するなど、確実な実力を顕示しています。東京コースの適性も高いため、上位争いが期待されます。\\n\\n#### 3. **ディスペランツァ （馬番: 3, 騎手: 鮫島克駿）**\\n- **印**: ▲\\n- **評価**: アーリントンCを勝利するなど、勢いのある馬です。馬体重も安定し、調教も順調であるため、要注意です。\\n\\n#### 6. **ロジリオン （馬番: 6, 騎手: 戸崎圭）**\\n- **印**: △\\n- **評価**: 強い馬でも食い下がる粘り強さがあり、東京の芝1600mでの実績もあります。スムーズな競馬ができれば好走する可能性が高いです。\\n\\n#### 12. **ゴンバデカーブース （馬番: 12, 騎手: モレイラ）**\\n- **印**: △\\n- **評価**: サウジアラビアRCでは勝利を収めており、実力馬です。調教師が状態が良いと評価している点もプラス材料です。\\n\\n#### 1. **ダノンマッキンリー （馬番: 1, 騎手: 北村友）**\\n- **印**: ☆\\n- **評価**: 中京でのタフな競馬を強いられながらも勝利しており、気性面の成長も見られます。東京芝1600mでもポテンシャルを発揮すれば有力です。\\n\\n### 最終予想\\n16. **ジャンタルマンタル**（◎）\\n14. **アスコリピチェーノ**（○）\\n3. **ディスペランツァ**（▲）\\n6. **ロジリオン**（△）\\n12. **ゴンバデカーブース**（△）\\n1. **ダノンマッキンリー**（☆）\"\r\n}";
+
         public RaceData RaceData { get; set; } = new RaceData();
 
         public Form1()
         {
             InitializeComponent();
-            var appSettings = AppSettingsManager.GetSection<AppSettings.AppSettings>("AppSettings");
 
-            _apiService = new ApiService(appSettings.ApiSettings.BaseUrl);
+            _apiService = new ApiService(_appSettings.ApiSettings.BaseUrl);
             _webScrapingService = new WebScrapingService();
         }
 
@@ -138,8 +143,74 @@ namespace UmaPoyofeatChatGPT2
 
         private async void btnUpdateRaces_Click(object sender, EventArgs e)
         {
+            toolStripStatusLabel1.Text = "データ登録中...";
             var selectedDate = dateTimePicker1.Value.ToString("yyyyMMdd");
             toolStripStatusLabel1.Text = await _webScrapingService.UpsertRaceInfosAsync(selectedDate);
+        }
+
+        private async void btnPredict_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                toolStripStatusLabel1.Text = "予想中...";
+                richTextBoxHorseInfo.Clear();
+
+                var requestUrl = "https://api.openai.com/v1/chat/completions";
+                var data = JsonConvert.SerializeObject(RaceData, Formatting.Indented);
+                var jsonContent = JsonConvert.SerializeObject(data);
+
+                var requestBody = new
+                {
+                    model = "gpt-4o",
+                    messages = new[]
+                    {
+                    new { role = "system",
+                          content = $"競馬の予想だよ。これから伝えるJSON形式の情報で、どの馬が3着以内になりそうかを客観的な意見を交えて教えて欲しい。" +
+                          $"文章で見解と評価をまとめて。あと、厩舎コメントの内容をそのまま流用しないで。調教タイム、競馬場や距離との相性、もからめて、人が読みたくなるような表現にしてねできれば5～10行の文章にしたい。それを◎(1個のみ)〇(1個のみ)▲(1個のみ)△(1個のみ☆(複数可)で印つけて表現して、予想する馬を1～6頭におさめてね。" +
+                          $"印付ける順番は必ず◎→〇→▲→△→☆となるようにしてね" +
+                          $"期待する馬がいない場合は、無理に印付けなくてもいいのでレースによっては予想頭数は1頭や2頭でもよい。特に未勝利のレースは"+
+                          $"出力はJSON形式でtitleとbodyで出力して欲しい。" +
+                          $"回答例：{ResponseExample}" +
+                          $"{Environment.NewLine}" +
+                          $"調教タイム(TrainingTime)は以下のルールで並んでいる。" +
+                          $"{Environment.NewLine}" +
+                          $"左から（ゴール前から逆算して）6F、5F、4F、3F、1Fのタイム。"+
+                          $"{Environment.NewLine}" +
+                          $"()内のタイムはラップ表示。その場合、6F-5F、5F-4F、4F-3F、3F-2F、2F-1Fのタイムが()内に表示されます" +
+                          $"{Environment.NewLine}"+
+                          $"それと回答の最後に以下の回答例のようにまとめて欲しい(先頭の最初の数字は馬番)"+
+                          $"### 最終予想\\n#### 16. **ジャンタルマンタル**（◎）\\n#### 14. **アスコリピチェーノ**（○）\\n#### 3. **ディスペランツァ**（▲）\\n#### 6. **ロジリオン**（△）\\n#### 12. **ゴンバデカーブース**（△）\\n#### 1. **ダノンマッキンリー**（☆）"
+                          }
+                    ,
+                    new { role = "user", content = $"{jsonContent}" },
+                    }
+                };
+                var jsonRequestBody = JsonConvert.SerializeObject(requestBody);
+
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Post,
+                    RequestUri = new Uri(requestUrl),
+                    Headers = { { "Authorization", $"Bearer {_appSettings.OpenAI.ApiKey}" } },
+                    Content = new StringContent(jsonRequestBody, Encoding.UTF8, "application/json")
+                };
+
+                var response = await new HttpClient().SendAsync(request);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var chatCompletion = JsonConvert.DeserializeObject<ChatCompletion>(responseBody);
+
+                if (chatCompletion == null) { chatCompletion = new ChatCompletion(); }
+                chatCompletion.Choices ??= new List<Choice> { new Choice() };
+
+                var predictionText = chatCompletion.Choices[0].Message?.Content;
+                richTextBoxHorseInfo.Text = predictionText.Replace("```", "").Replace("json", "");
+
+                toolStripStatusLabel1.Text = "予想完了";
+            }
+            catch (Exception ex)
+            {
+                toolStripStatusLabel1.Text = $"エラー：{ex.Message}";
+            }
         }
     }
 }

@@ -131,6 +131,7 @@
             btnPredict.TabIndex = 8;
             btnPredict.Text = "予想";
             btnPredict.UseVisualStyleBackColor = true;
+            btnPredict.Click += btnPredict_Click;
             // 
             // btnPutnote
             // 
