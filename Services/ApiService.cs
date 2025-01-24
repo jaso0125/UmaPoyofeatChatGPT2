@@ -38,15 +38,23 @@ namespace UmaPoyofeatChatGPT2.Services
 
         public async Task<List<RaceInfo>> GetRaceInfosByDateAsync(string date)
         {
-            var response = await _httpClient.GetAsync($"RaceInfo/{date}");
+            var response = await _httpClient.GetAsync($"RaceInfo/ByDate/{date}");
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<RaceInfo>>(jsonString) ?? new List<RaceInfo>();
         }
 
-        public async Task<RaceInfo> GetRaceInfoByDateRaceCourseRaceNumber(string raceId, string raceCource, string raceNumber)
+        public async Task<RaceInfo> GetRaceInfoByRaceIdAsync(string raceId)
         {
-            var response = await _httpClient.GetAsync($"RaceInfo/{raceId}/{raceCource}/{raceNumber}");
+            var response = await _httpClient.GetAsync($"RaceInfo/ByRaceId/{raceId}");
+            response.EnsureSuccessStatusCode();
+            var jsonString = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<RaceInfo>(jsonString) ?? new RaceInfo();
+        }
+
+        public async Task<RaceInfo> GetRaceInfoByDateRaceCourseRaceNumberAsync(string date, string raceCource, string raceNumber)
+        {
+            var response = await _httpClient.GetAsync($"RaceInfo/{date}/{raceCource}/{raceNumber}");
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<RaceInfo>(jsonString) ?? new RaceInfo();

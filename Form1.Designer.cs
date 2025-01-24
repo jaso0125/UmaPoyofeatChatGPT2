@@ -42,7 +42,11 @@
             btnX = new Button();
             btnOrePuro = new Button();
             hiddenDateLabel = new Label();
+            btnUpdateRaces = new Button();
+            statusStrip1 = new StatusStrip();
+            toolStripStatusLabel1 = new ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            statusStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // dateTimePicker1
@@ -173,12 +177,40 @@
             hiddenDateLabel.Size = new Size(0, 15);
             hiddenDateLabel.TabIndex = 13;
             // 
+            // btnUpdateRaces
+            // 
+            btnUpdateRaces.Location = new Point(18, 719);
+            btnUpdateRaces.Name = "btnUpdateRaces";
+            btnUpdateRaces.Size = new Size(90, 23);
+            btnUpdateRaces.TabIndex = 14;
+            btnUpdateRaces.Text = "レース登録";
+            btnUpdateRaces.UseVisualStyleBackColor = true;
+            btnUpdateRaces.Click += btnUpdateRaces_Click;
+            // 
+            // statusStrip1
+            // 
+            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1 });
+            statusStrip1.Location = new Point(0, 754);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Size = new Size(1361, 22);
+            statusStrip1.TabIndex = 15;
+            statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            toolStripStatusLabel1.BackColor = Color.Transparent;
+            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            toolStripStatusLabel1.Size = new Size(118, 17);
+            toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(29, 64, 96);
-            ClientSize = new Size(1361, 754);
+            ClientSize = new Size(1361, 776);
+            Controls.Add(statusStrip1);
+            Controls.Add(btnUpdateRaces);
             Controls.Add(hiddenDateLabel);
             Controls.Add(btnOrePuro);
             Controls.Add(btnX);
@@ -197,6 +229,8 @@
             Text = "UMA-03 Mark.06";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -217,5 +251,8 @@
         private Button btnX;
         private Button btnOrePuro;
         private Label hiddenDateLabel;
+        private Button btnUpdateRaces;
+        private StatusStrip statusStrip1;
+        private ToolStripStatusLabel toolStripStatusLabel1;
     }
 }

@@ -7,6 +7,7 @@
         public ConnectionStrings ConnectionStrings { get; set; } = new ConnectionStrings();
         public OpenAI OpenAI { get; set; } = new OpenAI();
         public ApiSettings ApiSettings { get; set; } = new ApiSettings();
+        public NetKeiba NetKeiba { get; set; } = new NetKeiba();
     }
 
     public class LineConfig
@@ -36,5 +37,12 @@
     public class ApiSettings
     {
         public string BaseUrl { get; set; } = string.Empty;
+    }
+
+    public class NetKeiba
+    {
+        public string LoginUrl { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 }

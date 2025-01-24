@@ -7,6 +7,7 @@ namespace UmaPoyofeatChatGPT2
     public partial class Form1 : Form
     {
         private readonly ApiService _apiService;
+        private readonly WebScrapingService _webScrapingService;
 
         public Form1()
         {
@@ -14,21 +15,36 @@ namespace UmaPoyofeatChatGPT2
             var appSettings = AppSettingsManager.GetSection<AppSettings.AppSettings>("AppSettings");
 
             _apiService = new ApiService(appSettings.ApiSettings.BaseUrl);
+            _webScrapingService = new WebScrapingService();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             lblCondition.Text = "";
             lblRaceInfo.Text = "";
+            toolStripStatusLabel1.Text = "";
         }
 
         private async void btnSearchRaceInfo_Click(object sender, EventArgs e)
         {
-            // 選択された日付でレース情報を取得
-            var selectedDate = dateTimePicker1.Value.ToString("yyyyMMdd");
-            var raceInfos = await _apiService.GetRaceInfosByDateAsync(selectedDate);
+            try
+            {
+                toolStripStatusLabel1.Text = "レースリストを取得中...";
 
-            LoadRaceInfo(raceInfos);
+                // 選択された日付でレース情報を取得
+                var selectedDate = dateTimePicker1.Value.ToString("yyyyMMdd");
+                var raceInfos = await _apiService.GetRaceInfosByDateAsync(selectedDate);
+
+                LoadRaceInfo(raceInfos);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"エラーが発生しました: {ex.Message}");
+            }
+            finally
+            {
+                toolStripStatusLabel1.Text = "完了";
+            }
         }
 
         private async void LoadRaceInfo(List<RaceInfo> raceInfos)
@@ -71,7 +87,7 @@ namespace UmaPoyofeatChatGPT2
                 var raceCourse = selectedItem.Split(' ')[0];
                 var raceNumber = selectedItem.Split(' ')[1];
 
-                var selectedRace = await _apiService.GetRaceInfoByDateRaceCourseRaceNumber(hiddenDateLabel.Text, raceCourse, raceNumber);
+                var selectedRace = await _apiService.GetRaceInfoByDateRaceCourseRaceNumberAsync(hiddenDateLabel.Text, raceCourse, raceNumber);
 
                 if (selectedRace != null)
                 {
@@ -106,6 +122,12 @@ namespace UmaPoyofeatChatGPT2
                 調教タイム = r.TrainingTime,
                 厩舎コメント = r.TrainerComment
             }).ToList();
+        }
+
+        private async void btnUpdateRaces_Click(object sender, EventArgs e)
+        {
+            var selectedDate = dateTimePicker1.Value.ToString("yyyyMMdd");
+            toolStripStatusLabel1.Text = await _webScrapingService.UpsertRaceInfosAsync(selectedDate);
         }
     }
 }

@@ -74,5 +74,8 @@ namespace UmaPoyofeatChatGPT2.Models
 
         [MaxLength(50)]
         public string? HorseName { get; set; } // 馬名
+
+        public DateTime? CreateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }
