@@ -1,4 +1,6 @@
+using System.Xml.Linq;
 using UmaPoyofeatChatGPT2.Common;
+using UmaPoyofeatChatGPT2.Data;
 using UmaPoyofeatChatGPT2.Models;
 using UmaPoyofeatChatGPT2.Services;
 
@@ -8,6 +10,7 @@ namespace UmaPoyofeatChatGPT2
     {
         private readonly ApiService _apiService;
         private readonly WebScrapingService _webScrapingService;
+        public RaceData RaceData { get; set; } = new RaceData();
 
         public Form1()
         {
@@ -95,8 +98,17 @@ namespace UmaPoyofeatChatGPT2
                     if (horseRaces.Count != 0)
                     {
                         BindHorseDataToGridView(horseRaces);
+
                         lblRaceInfo.Text = $"{selectedRace.RaceCourse}競馬場 {selectedRace.RaceNumber} {selectedRace.RaceName} {selectedRace.StartTime} {selectedRace.Distance}";
                         lblCondition.Text = $"天候：{selectedRace.Weather} 芝：{selectedRace.ShibaTrackCondition} ダ：{selectedRace.DirtTrackCondition}";
+
+                        RaceData.RaceInformation = RaceInformation.ConvertToRaceInformation(selectedRace);
+                        RaceData.RaceInformation.Horses = horseRaces.Select(x => RaceInformation.ConvertToHorceRaceInfo(x)).ToList();
+                        foreach (var horseRace in RaceData.RaceInformation.Horses)
+                        {
+                            var pastRaces = await _apiService.GetPastRacesAsync(horseRace.KettoNum);
+                            horseRace.PastRaces = pastRaces.Select(x => RaceInformation.ConvertToPastRaceInfo(x)).ToList();
+                        }
                     }
                 }
             }
