@@ -45,6 +45,7 @@
             btnUpdateRaces = new Button();
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
+            lblnoteURL = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             statusStrip1.SuspendLayout();
             SuspendLayout();
@@ -161,6 +162,7 @@
             btnX.TabIndex = 11;
             btnX.Text = "予想ツイート";
             btnX.UseVisualStyleBackColor = true;
+            btnX.Click += btnX_Click;
             // 
             // btnOrePuro
             // 
@@ -206,12 +208,21 @@
             toolStripStatusLabel1.Size = new Size(118, 17);
             toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
+            // lblnoteURL
+            // 
+            lblnoteURL.AutoSize = true;
+            lblnoteURL.Location = new Point(118, 723);
+            lblnoteURL.Name = "lblnoteURL";
+            lblnoteURL.Size = new Size(0, 15);
+            lblnoteURL.TabIndex = 16;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(29, 64, 96);
             ClientSize = new Size(1361, 776);
+            Controls.Add(lblnoteURL);
             Controls.Add(statusStrip1);
             Controls.Add(btnUpdateRaces);
             Controls.Add(hiddenDateLabel);
@@ -257,5 +268,6 @@
         private Button btnUpdateRaces;
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel1;
+        private Label lblnoteURL;
     }
 }

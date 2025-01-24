@@ -304,6 +304,7 @@ namespace UmaPoyofeatChatGPT2
         {
             var result = await NoteService.PutNote(richTextBoxHorseInfo.Text, _appSettings.NoteConfig);
 
+            lblnoteURL.Text = result;
             toolStripStatusLabel1.Text = $"Note投稿完了 {result}";
         }
 
@@ -335,6 +336,35 @@ namespace UmaPoyofeatChatGPT2
             var combinedMessage = string.Join("\n", messages);
             combinedMessage += $"{Environment.NewLine}{Environment.NewLine}予想してやってんだぞ！ありがたく思え！カスが！";
             await notifier.SendMessageAsync(combinedMessage);
+        }
+
+        private void btnX_Click(object sender, EventArgs e)
+        {
+            var messages = new List<string>();
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    var umaban = row.Cells[1].Value?.ToString();
+                    var horseName = row.Cells[2].Value?.ToString();
+                    var prediction = row.Cells[7].Value?.ToString();
+
+                    if (!string.IsNullOrEmpty(umaban) && !string.IsNullOrEmpty(horseName) && !string.IsNullOrEmpty(prediction))
+                    {
+                        var message = $"{umaban}番 {horseName} {prediction}";
+                        messages.Add(message);
+                    }
+                }
+            }
+            var combinedMessage = string.Join("\n", messages);
+
+            var tweetMessage = TweetService.MakeTweetMessage(lblRaceInfo.Text, combinedMessage, lblnoteURL.Text);
+
+            var tweetService = new TweetService(_appSettings.TwitterConfig);
+            var id = tweetService.Tweet(tweetMessage);
+
+            richTextBoxTweetMessage.Text = tweetMessage;
         }
     }
 }

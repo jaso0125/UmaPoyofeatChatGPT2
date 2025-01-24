@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UmaPoyofeatChatGPT2.AppSettings;
 
 namespace UmaPoyofeatChatGPT2.Services

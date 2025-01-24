@@ -24,6 +24,7 @@
         public string AccessTokenSecret { get; set; } = string.Empty;
         public string ConsumerKey { get; set; } = string.Empty;
         public string ConsumerSecret { get; set; } = string.Empty;
+        public string RequestUri { get; set; } = string.Empty;
     }
 
     public class ConnectionStrings
