@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using System.Text;
-using System.Windows.Forms;
-using System.Xml.Linq;
+using System.Text.RegularExpressions;
 using UmaPoyofeatChatGPT2.Common;
 using UmaPoyofeatChatGPT2.Data;
 using UmaPoyofeatChatGPT2.Models;
@@ -31,6 +30,7 @@ namespace UmaPoyofeatChatGPT2
             lblCondition.Text = "";
             lblRaceInfo.Text = "";
             toolStripStatusLabel1.Text = "";
+            hiddenDateLabel.Text = dateTimePicker1.Value.ToString("yyyyMMdd");
         }
 
         private async void btnSearchRaceInfo_Click(object sender, EventArgs e)
@@ -126,7 +126,7 @@ namespace UmaPoyofeatChatGPT2
 
         private void BindHorseDataToGridView(List<HorseRace> horseRaces)
         {
-            dataGridView1.DataSource = horseRaces.Select(r => new
+            dataGridView1.DataSource = horseRaces.Select(r => new GridViewModel
             {
                 枠 = r.Wakuban,
                 馬番 = r.Umaban,
@@ -205,12 +205,99 @@ namespace UmaPoyofeatChatGPT2
                 var predictionText = chatCompletion.Choices[0].Message?.Content;
                 richTextBoxHorseInfo.Text = predictionText.Replace("```", "").Replace("json", "");
 
+                var gridViewModels = UpdatePredictionMarks(chatCompletion.Choices[0].Message?.Content);
+                SortDataGridViewByPredictionMarks(gridViewModels);
+
                 toolStripStatusLabel1.Text = "予想完了";
             }
             catch (Exception ex)
             {
                 toolStripStatusLabel1.Text = $"エラー：{ex.Message}";
             }
+        }
+
+        private List<GridViewModel> UpdatePredictionMarks(string predictionText)
+        {
+            var pattern = @"[`{}\""\[\]]|title: |body: |json";
+            var replaceText = Regex.Replace(predictionText, pattern, "");
+
+            var lines = replaceText.Split("\\n");
+            var markMap = new Dictionary<string, string>();
+
+            foreach (var line in lines)
+            {
+                if (line.Contains('◎')) markMap[ExtractHorseName(line)] = "◎";
+                else if (line.Contains('○')) markMap[ExtractHorseName(line)] = "○";
+                else if (line.Contains('▲')) markMap[ExtractHorseName(line)] = "▲";
+                else if (line.Contains('△')) markMap[ExtractHorseName(line)] = "△";
+                else if (line.Contains('☆')) markMap[ExtractHorseName(line)] = "☆";
+            }
+
+            var gridViewModels = new List<GridViewModel>();
+
+            for (var i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                var gridViewModel = new GridViewModel
+                {
+                    枠 = dataGridView1.Rows[i].Cells[0].Value?.ToString(),
+                    馬番 = dataGridView1.Rows[i].Cells[1].Value?.ToString(),
+                    馬名 = dataGridView1.Rows[i].Cells[2].Value?.ToString(),
+                    性齢 = dataGridView1.Rows[i].Cells[3].Value?.ToString(),
+                    斤量 = dataGridView1.Rows[i].Cells[4].Value?.ToString(),
+                    騎手名 = dataGridView1.Rows[i].Cells[5].Value?.ToString(),
+                    馬体重 = dataGridView1.Rows[i].Cells[6].Value?.ToString(),
+                    調教タイム = dataGridView1.Rows[i].Cells[8].Value?.ToString(),
+                    厩舎コメント = dataGridView1.Rows[i].Cells[9].Value?.ToString(),
+                };
+
+                var horseName = dataGridView1.Rows[i].Cells[2].Value?.ToString();
+                if (horseName != null && markMap.ContainsKey(horseName))
+                {
+                    gridViewModel.予想印 = markMap[horseName];
+                }
+                gridViewModels.Add(gridViewModel);
+            }
+            return gridViewModels;
+        }
+
+        private string ExtractHorseName(string line)
+        {
+            var match = Regex.Match(line, @"\*\*(.*?)\*\*");
+            return match.Success ? match.Groups[1].Value : string.Empty;
+        }
+
+        private void SortDataGridViewByPredictionMarks(List<GridViewModel> gridViewModels)
+        {
+            var rows = gridViewModels.Where(r => r.予想印 != null).OrderBy(r =>
+            {
+                var mark = r.予想印;
+                var order = mark switch
+                {
+                    "◎" => 1,
+                    "○" => 2,
+                    "▲" => 3,
+                    "△" => 4,
+                    "☆" => 5,
+                    _ => 6
+                };
+                return (order, int.Parse(r.馬番));
+            }).ToList();
+
+            dataGridView1.DataSource = null;
+
+            dataGridView1.DataSource = rows.Select(r => new GridViewModel
+            {
+                枠 = r.枠,
+                馬番 = r.馬番,
+                馬名 = r.馬名,
+                性齢 = r.性齢,
+                斤量 = r.斤量,
+                騎手名 = r.騎手名,
+                馬体重 = r.馬体重,
+                予想印 = r.予想印,
+                調教タイム = r.調教タイム,
+                厩舎コメント = r.厩舎コメント
+            }).ToList();
         }
     }
 }
