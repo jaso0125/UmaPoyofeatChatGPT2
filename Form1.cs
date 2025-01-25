@@ -405,5 +405,23 @@ namespace UmaPoyofeatChatGPT2
 
             var p = Process.Start(processStartInfo);
         }
+
+        private async void btnUpdateRace_Click(object sender, EventArgs e)
+        {
+            var selectedItem = listBox1.SelectedItem?.ToString();
+            var selectedDate = dateTimePicker1.Value.ToString("yyyyMMdd");
+
+            if (selectedItem == null) return;
+
+            if (listBox1.SelectedItem != null)
+            {
+                var raceCourse = selectedItem.Split(' ')[0];
+                var raceNumber = selectedItem.Split(' ')[1];
+
+                var selectedRace = await _apiService.GetRaceInfoByDateRaceCourseRaceNumberAsync(hiddenDateLabel.Text, raceCourse, raceNumber);
+
+                toolStripStatusLabel1.Text = await _webScrapingService.UpsertRaceInfoAsync(selectedRace.RaceId);
+            }
+        }
     }
 }

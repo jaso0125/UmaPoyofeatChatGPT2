@@ -46,6 +46,7 @@
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             lblnoteURL = new Label();
+            btnUpdateRace = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             statusStrip1.SuspendLayout();
             SuspendLayout();
@@ -217,6 +218,16 @@
             lblnoteURL.Size = new Size(0, 15);
             lblnoteURL.TabIndex = 16;
             // 
+            // btnUpdateRace
+            // 
+            btnUpdateRace.Location = new Point(390, 719);
+            btnUpdateRace.Name = "btnUpdateRace";
+            btnUpdateRace.Size = new Size(90, 23);
+            btnUpdateRace.TabIndex = 14;
+            btnUpdateRace.Text = "レース登録(単)";
+            btnUpdateRace.UseVisualStyleBackColor = true;
+            btnUpdateRace.Click += btnUpdateRace_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -225,6 +236,7 @@
             ClientSize = new Size(1361, 776);
             Controls.Add(lblnoteURL);
             Controls.Add(statusStrip1);
+            Controls.Add(btnUpdateRace);
             Controls.Add(btnUpdateRaces);
             Controls.Add(hiddenDateLabel);
             Controls.Add(btnOrePuro);
@@ -270,5 +282,6 @@
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel1;
         private Label lblnoteURL;
+        private Button btnUpdateRace;
     }
 }

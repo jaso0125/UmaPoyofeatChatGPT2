@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using UmaPoyofeatChatGPT2.Common;
 using UmaPoyofeatChatGPT2.Data;
 using UmaPoyofeatChatGPT2.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
@@ -27,6 +28,61 @@ namespace UmaPoyofeatChatGPT2.Services
 
             // EncodingProvider を登録
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
+        public async Task<string> UpsertRaceInfoAsync(string raceId)
+        {
+            // ログイン処理
+            await LoginAsync();
+
+            // レース詳細ページURLを生成
+            var raceDetailUrl = $"https://race.netkeiba.com/race/shutuba.html?race_id={raceId}";
+
+            // レース詳細情報を取得
+            var detailPageBytes = await _httpClient.GetByteArrayAsync(raceDetailUrl);
+            var detailPageHtml = Encoding.GetEncoding("euc-jp").GetString(detailPageBytes);
+            var detailDoc = new HtmlDocument();
+            detailDoc.LoadHtml(detailPageHtml);
+
+            var horseRows = detailDoc.DocumentNode.SelectNodes(".//html/body/div[1]/div[3]/div[2]/table/tr");
+
+            if (horseRows == null)
+            {
+                return $"このレースは存在しません。";
+            }
+
+            // 競走馬情報を取得
+            var trainerTimeDic = await GetTrainingTimeAsync(raceId);
+            var trainerCommentDic = await GetTrainerCommentAsync(raceId);
+
+            // 各レースの馬毎のデータの追加・更新
+            var horseRaces = await _apiService.GetHorseRacesByRaceIdAsync(raceId);
+
+            var horseRacesList = new List<HorseRace>();
+            foreach (var row in horseRows)
+            {
+                var kettoNum = ExtractKettoNum(row.SelectSingleNode("td[4]/div/div/span/a").GetAttributeValue("href", ""));
+                var horseName = row.SelectSingleNode("td[4]").InnerText.Trim();
+
+                var horseRace = new HorseRace
+                {
+                    RaceId = raceId,
+                    Wakuban = row.SelectSingleNode("td[1]").InnerText.Trim(),
+                    Umaban = row.SelectSingleNode("td[2]").InnerText.Trim(),
+                    HorseName = horseName,
+                    KettoNum = kettoNum,
+                    GenderAge = row.SelectSingleNode("td[5]").InnerText.Trim(),
+                    Kinryo = row.SelectSingleNode("td[6]").InnerText.Trim(),
+                    Jockey = row.SelectSingleNode("td[7]").InnerText.Trim(),
+                    WeightChange = row.SelectSingleNode("td[9]").InnerText.Trim(),
+                    TrainingTime = trainerTimeDic.ContainsKey(horseName) ? trainerTimeDic[horseName] : "",
+                    TrainerComment = trainerCommentDic.ContainsKey(horseName) ? trainerCommentDic[horseName] : "",
+                };
+                horseRacesList.Add(horseRace);
+            }
+            await _apiService.UpsertHorseRacesAsync(horseRacesList);
+
+            return $"レース情報、馬毎のレース情報のデータ更新完了 raceId:{raceId}";
         }
 
         public async Task<string> UpsertRaceInfosAsync(string date)
