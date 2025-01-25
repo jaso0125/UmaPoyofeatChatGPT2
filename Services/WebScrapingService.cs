@@ -118,18 +118,20 @@ namespace UmaPoyofeatChatGPT2.Services
                 var jyoSections = await page.EvaluateAsync<string[][]>(@"
                 Array.from(document.querySelectorAll('.RaceList_DataList')).map(section => {
                     const title = section.querySelector('.RaceList_DataTitle').innerText.trim();
-                    const races = Array.from(section.querySelectorAll('dd ul li a')).map(node => node.innerText.trim());
-
+                    const races = Array.from(section.querySelectorAll('dd ul li a')).map(node => {
+                        const isWin5Race = node.querySelector('.Icon_GradeType') !== null; // 'Icon_GradeType'が存在するかチェック
+                        return `${node.innerText.trim()}|isWin5:${isWin5Race}`; // '|'区切りで`isWin5Race`を追加
+                    });
                     const weatherElement = section.querySelector('.Weather span');
                     const weatherClass = weatherElement ? weatherElement.className : 'Weather01'; // デフォルトで 'Weather01' = '晴'
                     const weather = weatherClass.includes('Weather01') ? '晴' :
                                     weatherClass.includes('Weather02') ? '曇' :
                                     weatherClass.includes('Weather03') ? '雨' :
                                     weatherClass.includes('Weather04') ? '雪' : '不明';
-
+            
                     const shibaElement = section.querySelector('.Shiba');
                     const shibaCondition = shibaElement ? shibaElement.innerText.split('：')[1] : '良';
-
+            
                     const dirtElement = section.querySelector('.Da');
                     const dirtCondition = dirtElement ? dirtElement.innerText.split('：')[1] : '良';
 
@@ -146,13 +148,21 @@ namespace UmaPoyofeatChatGPT2.Services
                     var weather = section[1];
                     var shibaCondition = section[2];
                     var dirtCondition = section[3];
-                    var raceNodes = section.Skip(4).ToArray();
+                    var raceNodes = section.Skip(4).Select(race =>
+                    {
+                        var parts = race.Split("|isWin5:");
+                        return new
+                        {
+                            Race = parts[0],
+                            IsWin5Race = bool.Parse(parts[1])
+                        };
+                    }).ToList();
                     var raceCourseCode = Util.raceCourseCodes.TryGetValue(jyoName, out string? value) ? value : "00";
-                    var raceDetails = raceNodes.Where(x => !string.IsNullOrEmpty(x));
+                    var raceDetails = raceNodes.Where(x => !string.IsNullOrEmpty(x.Race));
 
                     foreach (var raceNode in raceDetails)
                     {
-                        var info = RaceTopInfo.ParseRaceInfo(raceNode);
+                        var info = RaceTopInfo.ParseRaceInfo(raceNode.Race);
                         info.JyoName = jyoName;
 
                         // RaceNumberから数値部分を抽出
@@ -174,6 +184,7 @@ namespace UmaPoyofeatChatGPT2.Services
                                 StartTime = info.RaceTime,
                                 Distance = info.RaceDistance,
                                 Weather = weather,
+                                IsWin5Race = raceNode.IsWin5Race,
                                 ShibaTrackCondition = shibaCondition,
                                 DirtTrackCondition = dirtCondition,
                             };

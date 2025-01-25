@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using UmaPoyofeatChatGPT2.Common;
@@ -42,9 +43,17 @@ namespace UmaPoyofeatChatGPT2
 
                 // 選択された日付でレース情報を取得
                 var selectedDate = dateTimePicker1.Value.ToString("yyyyMMdd");
-                var raceInfos = await _apiService.GetRaceInfosByDateAsync(selectedDate);
 
-                LoadRaceInfo(raceInfos);
+                if (UmapoyoTab.SelectedIndex == 0)
+                {
+                    var raceInfos = await _apiService.GetRaceInfosByDateAsync(selectedDate);
+                    LoadRaceInfo(raceInfos);
+                }
+                else if (UmapoyoTab.SelectedIndex == 1)
+                {
+                    var win5RaceInfos = await _apiService.GetWin5RaceInfosByDateAsync(selectedDate);
+                    LoadWin5RaceInfo(win5RaceInfos);
+                }
             }
             catch (Exception ex)
             {
@@ -82,6 +91,30 @@ namespace UmaPoyofeatChatGPT2
             lblCondition.Text = $"天候：{firstRaceInfo.Weather} 芝：{firstRaceInfo.ShibaTrackCondition} ダ：{firstRaceInfo.DirtTrackCondition}";
 
             listBox1.SelectedIndex = 0;
+        }
+
+        private async void LoadWin5RaceInfo(List<RaceInfo> win5RafeInfos)
+        {
+            dataGridView2.DataSource = null;
+
+            if (win5RafeInfos.Count == 0)
+            {
+                lblRaceInfo.Text = "該当するレース情報が見つかりません";
+                return;
+            }
+
+            dataGridView2.DataSource = win5RafeInfos.Select(r => new GridViewModelWin5
+            {
+                レースNo = r.RaceNumber!,
+                競馬場 = r.RaceCourse,
+                レース名 = r.RaceName!,
+                発走時刻 = r.StartTime,
+                予想1 = "",
+                予想2 = "",
+                予想3 = "",
+                予想4 = "",
+                予想5 = "",
+            }).ToList();
         }
 
         private async void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -421,6 +454,22 @@ namespace UmaPoyofeatChatGPT2
                 var selectedRace = await _apiService.GetRaceInfoByDateRaceCourseRaceNumberAsync(hiddenDateLabel.Text, raceCourse, raceNumber);
 
                 toolStripStatusLabel1.Text = await _webScrapingService.UpsertRaceInfoAsync(selectedRace.RaceId);
+            }
+        }
+
+        private void UmapoyoTab_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (UmapoyoTab.SelectedIndex == 0)
+            {
+                listBox1.Enabled = true;
+                btnPredict.Enabled = true;
+                Win5PredictButton.Enabled = false;
+            }
+            else if (UmapoyoTab.SelectedIndex == 1)
+            {
+                listBox1.Enabled = false;
+                btnPredict.Enabled = false;
+                Win5PredictButton.Enabled = true;
             }
         }
     }

@@ -19,4 +19,17 @@ namespace UmaPoyofeatChatGPT2.Data
         public string? 調教タイム { get; set; } = string.Empty;
         public string? 厩舎コメント { get; set; } = string.Empty;
     }
+
+    public class GridViewModelWin5
+    {
+        public string レースNo { get; set; } = string.Empty;
+        public string 競馬場 { get; set; } = string.Empty;
+        public string レース名 { get; set; } = string.Empty;
+        public string 発走時刻 { get; set; } = string.Empty;
+        public string 予想1 { get; set; } = string.Empty;
+        public string 予想2 { get; set; } = string.Empty;
+        public string 予想3 { get; set; } = string.Empty;
+        public string 予想4 { get; set; } = string.Empty;
+        public string 予想5 { get; set; } = string.Empty;
+    }
 }

@@ -46,6 +46,8 @@ namespace UmaPoyofeatChatGPT2.Data
         [JsonProperty("ダート馬場")]
         public string DirtTrackCondition { get; set; } = string.Empty;
 
+        public bool? IsWin5Race { get; set; } = false;
+
         [JsonProperty("競走馬情報")]
         public List<HorseRaceInfo>? Horses { get; set; } = new List<HorseRaceInfo>();
 
@@ -63,6 +65,7 @@ namespace UmaPoyofeatChatGPT2.Data
                 Weather = raceInfo.Weather,
                 ShibaTrackCondition = raceInfo.ShibaTrackCondition,
                 DirtTrackCondition = raceInfo.DirtTrackCondition,
+                IsWin5Race = raceInfo.IsWin5Race,
                 Horses = new List<HorseRaceInfo>()
             };
             return raceInformation;

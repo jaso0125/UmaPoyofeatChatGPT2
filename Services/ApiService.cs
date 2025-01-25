@@ -44,6 +44,14 @@ namespace UmaPoyofeatChatGPT2.Services
             return JsonConvert.DeserializeObject<List<RaceInfo>>(jsonString) ?? new List<RaceInfo>();
         }
 
+        public async Task<List<RaceInfo>> GetWin5RaceInfosByDateAsync(string date)
+        {
+            var response = await _httpClient.GetAsync($"RaceInfo/Win5/ByDate/{date}");
+            response.EnsureSuccessStatusCode();
+            var jsonString = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<RaceInfo>>(jsonString) ?? new List<RaceInfo>();
+        }
+
         public async Task<RaceInfo?> GetRaceInfoByRaceIdAsync(string raceId)
         {
             var response = await _httpClient.GetAsync($"RaceInfo/ByRaceId/{raceId}");

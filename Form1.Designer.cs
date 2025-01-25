@@ -47,8 +47,17 @@
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             lblnoteURL = new Label();
             btnUpdateRace = new Button();
+            UmapoyoTab = new TabControl();
+            tabPage1 = new TabPage();
+            tabPage2 = new TabPage();
+            dataGridView2 = new DataGridView();
+            Win5PredictButton = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             statusStrip1.SuspendLayout();
+            UmapoyoTab.SuspendLayout();
+            tabPage1.SuspendLayout();
+            tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             SuspendLayout();
             // 
             // dateTimePicker1
@@ -92,9 +101,9 @@
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(114, 56);
+            dataGridView1.Location = new Point(6, 6);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(1235, 326);
+            dataGridView1.Size = new Size(1211, 326);
             dataGridView1.TabIndex = 4;
             // 
             // listBox1
@@ -110,18 +119,18 @@
             // richTextBoxHorseInfo
             // 
             richTextBoxHorseInfo.BackColor = Color.FromArgb(238, 128, 20);
-            richTextBoxHorseInfo.Location = new Point(114, 392);
+            richTextBoxHorseInfo.Location = new Point(114, 408);
             richTextBoxHorseInfo.Name = "richTextBoxHorseInfo";
-            richTextBoxHorseInfo.Size = new Size(797, 311);
+            richTextBoxHorseInfo.Size = new Size(797, 295);
             richTextBoxHorseInfo.TabIndex = 6;
             richTextBoxHorseInfo.Text = "";
             // 
             // richTextBoxTweetMessage
             // 
             richTextBoxTweetMessage.BackColor = Color.FromArgb(238, 128, 20);
-            richTextBoxTweetMessage.Location = new Point(917, 393);
+            richTextBoxTweetMessage.Location = new Point(917, 408);
             richTextBoxTweetMessage.Name = "richTextBoxTweetMessage";
-            richTextBoxTweetMessage.Size = new Size(432, 310);
+            richTextBoxTweetMessage.Size = new Size(432, 295);
             richTextBoxTweetMessage.TabIndex = 7;
             richTextBoxTweetMessage.Text = "";
             // 
@@ -228,12 +237,64 @@
             btnUpdateRace.UseVisualStyleBackColor = true;
             btnUpdateRace.Click += btnUpdateRace_Click;
             // 
+            // UmapoyoTab
+            // 
+            UmapoyoTab.Controls.Add(tabPage1);
+            UmapoyoTab.Controls.Add(tabPage2);
+            UmapoyoTab.Location = new Point(128, 46);
+            UmapoyoTab.Name = "UmapoyoTab";
+            UmapoyoTab.SelectedIndex = 0;
+            UmapoyoTab.Size = new Size(1221, 356);
+            UmapoyoTab.TabIndex = 17;
+            UmapoyoTab.SelectedIndexChanged += UmapoyoTab_SelectedIndexChanged;
+            // 
+            // tabPage1
+            // 
+            tabPage1.Controls.Add(dataGridView1);
+            tabPage1.Location = new Point(4, 24);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Padding = new Padding(3);
+            tabPage1.Size = new Size(1213, 328);
+            tabPage1.TabIndex = 0;
+            tabPage1.Text = "競馬予想出馬表";
+            tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            tabPage2.Controls.Add(dataGridView2);
+            tabPage2.Location = new Point(4, 24);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Padding = new Padding(3);
+            tabPage2.Size = new Size(1213, 328);
+            tabPage2.TabIndex = 1;
+            tabPage2.Text = "WIN5予想";
+            tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView2
+            // 
+            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView2.Location = new Point(1, 1);
+            dataGridView2.Name = "dataGridView2";
+            dataGridView2.Size = new Size(1211, 326);
+            dataGridView2.TabIndex = 5;
+            // 
+            // Win5PredictButton
+            // 
+            Win5PredictButton.Location = new Point(869, 719);
+            Win5PredictButton.Name = "Win5PredictButton";
+            Win5PredictButton.Size = new Size(75, 23);
+            Win5PredictButton.TabIndex = 18;
+            Win5PredictButton.Text = "予想(WIN5)";
+            Win5PredictButton.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(29, 64, 96);
             ClientSize = new Size(1361, 776);
+            Controls.Add(Win5PredictButton);
+            Controls.Add(UmapoyoTab);
             Controls.Add(lblnoteURL);
             Controls.Add(statusStrip1);
             Controls.Add(btnUpdateRace);
@@ -247,7 +308,6 @@
             Controls.Add(richTextBoxTweetMessage);
             Controls.Add(richTextBoxHorseInfo);
             Controls.Add(listBox1);
-            Controls.Add(dataGridView1);
             Controls.Add(lblCondition);
             Controls.Add(lblRaceInfo);
             Controls.Add(btnSearchRaceInfo);
@@ -258,6 +318,10 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             statusStrip1.ResumeLayout(false);
             statusStrip1.PerformLayout();
+            UmapoyoTab.ResumeLayout(false);
+            tabPage1.ResumeLayout(false);
+            tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -283,5 +347,10 @@
         private ToolStripStatusLabel toolStripStatusLabel1;
         private Label lblnoteURL;
         private Button btnUpdateRace;
+        private TabControl UmapoyoTab;
+        private TabPage tabPage1;
+        private TabPage tabPage2;
+        private DataGridView dataGridView2;
+        private Button Win5PredictButton;
     }
 }
