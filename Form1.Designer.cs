@@ -172,6 +172,7 @@
             btnOrePuro.TabIndex = 12;
             btnOrePuro.Text = "俺プロ登録";
             btnOrePuro.UseVisualStyleBackColor = true;
+            btnOrePuro.Click += btnOrePuro_Click;
             // 
             // hiddenDateLabel
             // 

@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using UmaPoyofeatChatGPT2.Common;
@@ -338,7 +339,7 @@ namespace UmaPoyofeatChatGPT2
             await notifier.SendMessageAsync(combinedMessage);
         }
 
-        private void btnX_Click(object sender, EventArgs e)
+        private async void btnX_Click(object sender, EventArgs e)
         {
             var messages = new List<string>();
 
@@ -362,9 +363,47 @@ namespace UmaPoyofeatChatGPT2
             var tweetMessage = TweetService.MakeTweetMessage(lblRaceInfo.Text, combinedMessage, lblnoteURL.Text);
 
             var tweetService = new TweetService(_appSettings.TwitterConfig);
-            var id = tweetService.Tweet(tweetMessage);
+            var id = await tweetService.Tweet(tweetMessage);
 
             richTextBoxTweetMessage.Text = tweetMessage;
+            toolStripStatusLabel1.Text = $"X‚Éƒ|ƒXƒgŠ®—¹ {id}";
+        }
+
+        private void btnOrePuro_Click(object sender, EventArgs e)
+        {
+            var autoRunPath = @"C:\UmaPoyo\UMAAuto\bin\Release\UMAAuto";
+
+            var argURLData = $"{RaceData.RaceInformation.RaceId}";
+
+            var datas = "";
+            var dataGridContents = new List<DataGridContent>();
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (!row.IsNewRow)
+                {
+                    var dataGridContent = new DataGridContent();
+
+                    dataGridContent.Umaban = row.Cells[1].Value?.ToString()!;
+                    dataGridContent.Bamei = row.Cells[2].Value?.ToString()!;
+                    dataGridContent.Mark = row.Cells[7].Value?.ToString()!;
+
+                    dataGridContents.Add(dataGridContent);
+                }
+            }
+            var orePuroDataList = dataGridContents.Where(x => x.Mark != "").ToList();
+
+            foreach (var item in orePuroDataList)
+            {
+                datas += item.Umaban + ",";
+            }
+            datas = datas.TrimEnd(',');
+
+            var processStartInfo = new ProcessStartInfo();
+            processStartInfo.FileName = autoRunPath;
+            processStartInfo.Arguments = $"{argURLData} {datas}";
+
+            var p = Process.Start(processStartInfo);
         }
     }
 }
