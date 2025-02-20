@@ -14,6 +14,12 @@ namespace UmaPoyofeatChatGPT2.Data
         public RaceInformation RaceInformation { get; set; } = new RaceInformation();
     }
 
+    public class Win5RaceData
+    {
+        [JsonProperty("Win5レース情報")]
+        public List<RaceInformation> RaceInformations { get; set; } = new List<RaceInformation>();
+    }
+
     public partial class RaceInformation
     {
         [JsonProperty("レースID")]

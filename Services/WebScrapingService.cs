@@ -119,7 +119,7 @@ namespace UmaPoyofeatChatGPT2.Services
                 Array.from(document.querySelectorAll('.RaceList_DataList')).map(section => {
                     const title = section.querySelector('.RaceList_DataTitle').innerText.trim();
                     const races = Array.from(section.querySelectorAll('dd ul li a')).map(node => {
-                        const isWin5Race = node.querySelector('.Icon_GradeType') !== null; // 'Icon_GradeType'が存在するかチェック
+                        const isWin5Race = node.querySelector('.Icon_GradeType13') !== null; // 'Icon_GradeType'が存在するかチェック
                         return `${node.innerText.trim()}|isWin5:${isWin5Race}`; // '|'区切りで`isWin5Race`を追加
                     });
                     const weatherElement = section.querySelector('.Weather span');
@@ -128,10 +128,10 @@ namespace UmaPoyofeatChatGPT2.Services
                                     weatherClass.includes('Weather02') ? '曇' :
                                     weatherClass.includes('Weather03') ? '雨' :
                                     weatherClass.includes('Weather04') ? '雪' : '不明';
-            
+
                     const shibaElement = section.querySelector('.Shiba');
                     const shibaCondition = shibaElement ? shibaElement.innerText.split('：')[1] : '良';
-            
+
                     const dirtElement = section.querySelector('.Da');
                     const dirtCondition = dirtElement ? dirtElement.innerText.split('：')[1] : '良';
 

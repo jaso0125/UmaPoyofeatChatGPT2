@@ -280,12 +280,13 @@
             // 
             // Win5PredictButton
             // 
-            Win5PredictButton.Location = new Point(869, 719);
+            Win5PredictButton.Location = new Point(824, 719);
             Win5PredictButton.Name = "Win5PredictButton";
-            Win5PredictButton.Size = new Size(75, 23);
+            Win5PredictButton.Size = new Size(120, 23);
             Win5PredictButton.TabIndex = 18;
             Win5PredictButton.Text = "予想(WIN5)";
             Win5PredictButton.UseVisualStyleBackColor = true;
+            Win5PredictButton.Click += Win5PredictButton_Click;
             // 
             // Form1
             // 
